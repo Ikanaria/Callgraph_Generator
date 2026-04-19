@@ -26,7 +26,7 @@ Features:
 
 ### 2. Installation
 
-Python 3.13 is required.
+Python 3.9+ is required.
 Install the packages:
 
 ```
@@ -49,7 +49,7 @@ python callgraph.py /path/to/your/project
 ```
    Wait for it to finish – it will show progress and create the files.
 
-2. **Open the HTML file:** Look for a file like `Callgraph_YYYYMMDD_HHMMSS.html` in the same folder. Double-click to open in your browser.
+2. **Open the HTML file:** Look for a file like `projectname_Callgraph_YYYYMMDD_HHMMSS.html` in the same folder. Double-click to open in your browser.
 
 3. **Explore in the browser:**
     - Move nodes by dragging them.
@@ -100,10 +100,6 @@ Tip: Keep physics on initially for a clean layout. Then turn it off and arrange 
 - **Log File:** Tab-separated call counts (timestamped, e.g., `Callgraph_YYYYMMDD_HHMMSS_calls.log`)
   - Columns: From, To, Calls
   - Sorted by call frequency (highest first)
-
-Optional PNG/PDF export:
-- Set OUTPUT_PNG = "callgraph.png"
-- Set OUTPUT_PDF = "callgraph.pdf"
 
 ### 6. Troubleshooting
 - **Script doesn't run:** Ensure Python 3.13 is installed and in your PATH. Type `python --version` in the terminal to check.

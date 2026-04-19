@@ -6,7 +6,6 @@ pip install pyvis tqdm pyppeteer
 Application for analyzing and visualizing the structure of a Python program
  - Searches a project folder (your_project/)
  - Extracts: Modules, Classes, async def / def, Function calls
- - Saves everything as JSON
  - Generates an interactive HTML graph visualization via PyVis
  
  Generates an interactive diagram where:
@@ -27,7 +26,7 @@ Python Callgraph Generator with:
 - Line counter in legend
 """
 
-import ast, os, hashlib, argparse, sys
+import ast, os, hashlib, argparse
 from pathlib import Path
 from datetime import datetime
 from typing import List, Tuple, Optional, Dict
