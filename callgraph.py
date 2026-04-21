@@ -26,11 +26,11 @@ Python Callgraph Generator with:
 - Line counter in legend
 """
 
-import ast, os, hashlib, argparse
+import ast, os, hashlib, argparse, html
 from pathlib import Path
 from datetime import datetime
 from typing import List, Tuple, Optional, Dict
-from pyvis.network import Network
+from pyvis.network import Network # type: ignore
 from collections import defaultdict, Counter
 
 # -------------------------------
@@ -55,7 +55,9 @@ def shortpath(p: str, root: str) -> str:
         return str(Path(p).resolve().relative_to(Path(root).resolve()))
     except:
         return p
-
+    
+def safe(text: str) -> str:
+    return html.escape(str(text))
 # -------------------------------
 # CONFIG
 # -------------------------------
@@ -286,11 +288,11 @@ class FuncInfo:
 
     def tooltip(self):
         return (
-            f"<b>{self.name}()</b><br>"
-            f"Module: {self.module}<br>"
-            f"File: {shortpath(self.filepath, PROJECT_ROOT)}:{self.lineno}<br>"
+            f"<b>{safe(self.name)}()</b><br>"
+            f"Module: {safe(self.module)}<br>"
+            f"File: {safe(shortpath(self.filepath, PROJECT_ROOT))}:{safe(self.lineno)}<br>"
             f"Type: {'async' if self.is_async else 'sync'}<br>"
-            f"Routes: {' '.join(self.methods)} {' '.join(self.paths)}"
+            f"Routes: {' '.join(safe(method) for method in self.methods)} {' '.join(safe(path) for path in self.paths)}"
         )
 
 # -------------------------------
@@ -465,7 +467,7 @@ Blank: {overall['blank']:,} ({blank_pct:.1f}%)<br>
     for dir_name, stats in sorted_dirs:
         html += f"""
 <div style="margin-left:8px;font-size:11px;">
-<b>{dir_name}</b>: {stats['code']:,} lines ({stats['files']} files)<br>
+<b>{safe(dir_name)}</b>: {stats['code']:,} lines ({stats['files']} files)<br>
 </div>
 """
     
@@ -503,7 +505,7 @@ def build_graph(funcs: List[FuncInfo], line_stats: Dict):
         if folder_path in ("", "."):
             folder_path = "root"
         top_folder = top_level_folder(folder_path)
-        file_label = f"{f.name}()"
+        file_label = f"{safe(f.name)}()"
         if f.is_async:
             file_label += " (async)"
 
@@ -535,14 +537,14 @@ def build_graph(funcs: List[FuncInfo], line_stats: Dict):
                         rn = f"route:{key}"
                         net.add_node(
                             rn,
-                            label=key,
+                            label=safe(key),
                             shape="ellipse",
                             group="route",
                             color={
                                 "background": COLOR_CONFIG["route_background"],
                                 "border": COLOR_CONFIG["route_border"]
                             },
-                            title=f"Route {key}"
+                            title=f"Route {safe(key)}"
                         )
                         route_nodes[key] = rn
                     net.add_edge(route_nodes[key], f.id)
@@ -631,7 +633,7 @@ def build_graph(funcs: List[FuncInfo], line_stats: Dict):
         module_legend_html += (
             f'<div style="display:flex;align-items:center;margin-bottom:2px;">'
             f'<div style="width:18px;height:18px;background:{color};border:2px solid #444;border-radius:4px;margin-right:8px;"></div>'
-            f'<div style="font-size:13px;color:#111;">{folder}</div>'
+            f'<div style="font-size:13px;color:#111;">{safe(folder)}</div>'
             f'<div style="font-size:10px;color:#666;margin-left:8px;">({code_lines:,} lines, {file_count} files)</div>'
             f'</div>'
         )
